@@ -85,16 +85,16 @@ class App extends Component {
   }
 
   render_main_menu() {
-    let { current_menu } = this.state;
     return (
       <MuiThemeProvider>
         <div className="App">
-          <h1>{current_menu == 'main' ? 'worked' : 'not'}</h1>
+      
           <MainMenuHeader header_name="Welcome to McMaster University"/>
           <MainMenuBuy />
           <MainMenuOptions />
           <BuyMenu />
           <RefundMenu />
+      
         </div>
       </MuiThemeProvider>
     );
