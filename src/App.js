@@ -20,151 +20,9 @@ import ActionAndroid from 'material-ui/svg-icons/action/android';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-class BuyMenu extends Component {
-  constructor(props) {
-    super(props);
-    debugger
-    this.state = {
-      finished: false,
-      stepIndex: 0,
-      paymentType: '',
-    };
-  }
+import BuyMenu from './BuyMenu';
+import RefundMenu from './RefundMenu';
 
-  componentDidUpdate(prevProps, prevState){
-    debugger
-  }
-
-  setPaymentType (event) {
-    const {stepIndex} = this.state;
-    debugger
-    console.log(this.state);
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
-      paymentType: event,
-    });
-    console.log(this.state.paymentType);
-  };
-
-  handlePrev = () => {
-    const {stepIndex} = this.state;
-    if (stepIndex > 0) {
-      this.setState({stepIndex: stepIndex - 1});
-    }
-  };
-
-
-
-renderStepActions(step) {
-    const {stepIndex} = this.state;
-
-    return (
-      <div style={{margin: '12px 0'}}>
-        <RaisedButton
-          label={stepIndex === 2 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
-          onTouchTap={this.handleNext}
-          style={{marginRight: 12}}
-        />
-        {step > 0 && (
-          <FlatButton
-            label="Back"
-            disabled={stepIndex === 0}
-            disableTouchRipple={true}
-            disableFocusRipple={true}
-            onTouchTap={this.handlePrev}
-          />
-        )}
-      </div>
-    );
-  }
-
-  render() {
-    const {finished, stepIndex} = this.state;
-
-    return (
-      <div className="BuyMenu" style={{maxWidth: 380, maxHeight: 400, margin: 'auto'}}>
-        <Stepper activeStep={stepIndex} orientation="vertical">
-          <Step>
-            <StepLabel>Select preferred transaction method</StepLabel>
-            <StepContent>
-              <p>
-                Please select which payment type you would like to use.
-              </p>
-              <div>
-                
-              </div>
-              
-                <RaisedButton
-                  label={'Credit Card'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  testValue={"Testing this shit"}
-                  onTouchTap={() => this.setPaymentType("credit")}
-
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'Debit Card'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.setPaymentType("debit")}
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'Cash'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.setPaymentType("coin")}
-                  style={{marginRight: 12}}
-                />
-              
-              {this.renderStepActions(0)}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Make transaction</StepLabel>
-            <StepContent>
-              <p>Please insert your </p>
-              {this.renderStepActions(1)}
-            </StepContent>
-          </Step>
-          <Step>
-            <StepLabel>Create an ad</StepLabel>
-            <StepContent>
-              <p>
-                Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.
-              </p>
-              {this.renderStepActions(2)}
-            </StepContent>
-          </Step>
-        </Stepper>
-        {finished && (
-          <p style={{margin: '20px 0', textAlign: 'center'}}>
-            <a
-              href="#"
-              onClick={(event) => {
-                event.preventDefault();
-                this.setState({stepIndex: 0, finished: false});
-              }}
-            >
-              Click here
-            </a> to reset the example.
-          </p>
-        )}
-      </div>
-    );
-  }
-}
 
 class MainMenuHeader extends Component {
   render() {
@@ -180,7 +38,7 @@ class MainMenuHeader extends Component {
 class MainMenuBuy extends Component {
   render() {
     return (
-      <div classname="MainMenuBuy">
+      <div className="MainMenuBuy">
 
       </div>
     )
@@ -197,18 +55,67 @@ class MainMenuOptions extends Component {
   }
 }
 
+
 class App extends Component {
-  render() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      current_menu: 'main',
+    };
+  }
+
+  render_refund_menu() {
+    return (
+      <div className="App">
+        <MuiThemeProvider>
+          <RefundMenu />
+        </MuiThemeProvider>
+      </div>
+    );
+  }
+
+  render_buy_menu() {
+    return (
+      <div className="App">
+        <MuiThemeProvider>
+          <BuyMenu />
+        </MuiThemeProvider>
+      </div>
+    );
+  }
+
+  render_main_menu() {
+    let { current_menu } = this.state;
     return (
       <MuiThemeProvider>
-      <div className="App">
-        <MainMenuHeader header_name="Welcome to McMaster University"/>
-        <MainMenuBuy />
-        <MainMenuOptions />
-        <BuyMenu />
-      </div>
+        <div className="App">
+          <h1>{current_menu == 'main' ? 'worked' : 'not'}</h1>
+          <MainMenuHeader header_name="Welcome to McMaster University"/>
+          <MainMenuBuy />
+          <MainMenuOptions />
+          <BuyMenu />
+          <RefundMenu />
+        </div>
       </MuiThemeProvider>
     );
+  }
+
+  render() {
+    let { current_menu } = this.state;
+    if (current_menu == 'main'){
+      console.log('Rendering main menu');
+      return this.render_main_menu();
+    } 
+
+    else if (current_menu == 'buy'){
+      console.log('Rendering buy menu');
+      return this.render_buy_menu();
+    }
+
+    else if (current_menu == 'refund'){
+      console.log('Rendering refund menu');
+      return this.render_refund_menu();
+    }
   }
 }
 
