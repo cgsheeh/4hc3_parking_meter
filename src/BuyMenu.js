@@ -8,6 +8,7 @@ import {
   StepContent,
 } from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
+import BarcodeEntry from './BarcodeEntry';
 
 
 class BuyMenu extends Component {
@@ -17,6 +18,9 @@ class BuyMenu extends Component {
       finished: false,
       stepIndex: 0,
       paymentType: '',
+      barCode: '',
+      amountPaid: 0,
+      amountDue: 0,
     };
   }
 
@@ -37,9 +41,18 @@ class BuyMenu extends Component {
     }
   };
 
+  get_barcode = (barcode) => {
+    console.log(barcode);
+  }
+
   renderCredit = () => {
     return (
-        <p>This is the credit screen.</p>
+      <div>
+        <BarcodeEntry
+         pass_barcode_value={this.get_barcode}
+        />
+        <p>Hello credit!</p>
+      </div>
     );
   };
 
@@ -85,7 +98,7 @@ renderStepActions(step) {
     const {finished, stepIndex} = this.state;
 
     return (
-      <div className="BuyMenu" style={{maxWidth: 380, maxHeight: 400, margin: 'auto'}}>
+      <div className="BuyMenu" style={{maxWidth: 680, maxHeight: 400, margin: 'auto'}}>
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
             <StepLabel>Select preferred transaction method</StepLabel>
