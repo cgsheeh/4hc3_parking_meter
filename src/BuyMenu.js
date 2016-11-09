@@ -22,13 +22,12 @@ class BuyMenu extends Component {
 
   setPaymentType (event) {
     const {stepIndex} = this.state;
-    console.log(this.state);
     this.setState({
       stepIndex: stepIndex + 1,
       finished: stepIndex >= 2,
       paymentType: event,
     });
-    console.log(this.state.paymentType);
+    console.log(event);
   };
 
   handlePrev = () => {
@@ -38,21 +37,35 @@ class BuyMenu extends Component {
     }
   };
 
+  renderCredit = () => {
+    return (
+        <p>This is the credit screen.</p>
+    );
+  };
 
+  renderDebit = () => {
+    return (
+        <p>This is the debit screen.</p>
+    );
+  };
+
+  renderCoin = () => {
+    return (
+        <p>This is the coin screen.</p>
+    );
+  };
+
+  renderAccount = () => {
+    return (
+        <p>This is the account screen.</p>
+    );
+  };
 
 renderStepActions(step) {
     const {stepIndex} = this.state;
 
     return (
       <div style={{margin: '12px 0'}}>
-        <RaisedButton
-          label={stepIndex === 2 ? 'Finish' : 'Next'}
-          disableTouchRipple={true}
-          disableFocusRipple={true}
-          primary={true}
-          onTouchTap={this.handleNext}
-          style={{marginRight: 12}}
-        />
         {step > 0 && (
           <FlatButton
             label="Back"
@@ -65,6 +78,8 @@ renderStepActions(step) {
       </div>
     );
   }
+
+
 
   render() {
     const {finished, stepIndex} = this.state;
@@ -79,9 +94,7 @@ renderStepActions(step) {
                 Please select which payment type you would like to use.
               </p>
               <div>
-                
               </div>
-              
                 <RaisedButton
                   label={'Credit Card'}
                   disableTouchRipple={true}
@@ -99,6 +112,7 @@ renderStepActions(step) {
                   onTouchTap={() => this.setPaymentType("debit")}
                   style={{marginRight: 12}}
                 />
+                <p></p>
                 <RaisedButton
                   label={'Cash'}
                   disableTouchRipple={true}
@@ -107,19 +121,29 @@ renderStepActions(step) {
                   onTouchTap={() => this.setPaymentType("coin")}
                   style={{marginRight: 12}}
                 />
-              
+                <RaisedButton
+                  label={'Spending Account'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.setPaymentType("account")}
+                  style={{marginRight: 12}}
+                />
               {this.renderStepActions(0)}
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Make transaction</StepLabel>
+            <StepLabel>Enter Payment Details</StepLabel>
             <StepContent>
-              <p>Please insert your </p>
+              {this.state.paymentType === 'credit' ? this.renderCredit(): null}  
+              {this.state.paymentType === 'debit' ? this.renderDebit(): null}  
+              {this.state.paymentType === 'coin' ? this.renderCoin(): null}  
+              {this.state.paymentType === 'account' ? this.renderAccount(): null}  
               {this.renderStepActions(1)}
             </StepContent>
           </Step>
           <Step>
-            <StepLabel>Create an ad</StepLabel>
+            <StepLabel>Confirm Payment</StepLabel>
             <StepContent>
               <p>
                 Try out different ad text to see what brings in the most customers,
