@@ -53,27 +53,42 @@ class EnterTicketInfoStep extends Component {
 
 // Code for selecting how to receive the refund
 class SelectRefundMethodStep extends Component {
-	advance_refund_state = () => {
-		this.props.refundStateUpdate({
-			buy_step: 2,
-		});
+
+	style = {
+		raisedButton: {
+			margin: "10px"
+		}
 	}
+
+	// advance_refund_state = (event) => {
+	// 	if ()
+	// }
+
+	// handle_key_press() {
+	// 	if(event.)
+	// }
 
 	render() {
 		return (
 			<div className="SelectRefundMethodStep">
 		         <RaisedButton 
 		         	label="Cash" 
-		         	onClick={this.advance_refund_state} 
+		         	onClick={this.cash_refund} 
+		         	style={this.style.raisedButton}
+		         	ref="cash_refund_button"
+		         	onkeypress={this.handle_key_press}
 		         />
 		         <RaisedButton 
 		         	label="Credit" 
 		         	onClick={this.advance_refund_state} 
-		         	children={<FontIcon className="material-icons">credit_card</FontIcon>}
+		         	style={this.style.raisedButton}
+		         	ref="credit_refund_button"
 		         />
 		         <RaisedButton
 		         	label="Account"
 		         	onClick={this.advance_refund_state}
+		         	style={this.style.raisedButton}
+		         	ref="account_refund_button"
 		         />
 	        </div>
 		);
@@ -109,11 +124,12 @@ class RefundMenu extends Component {
       refund_method: null,
       account: null,
       barcode: null,
+      refund_channel: null,
     };
   }
 
   render() {
-    var { buy_step, barcode } = this.state;
+    var { buy_step, barcode, refund_channel } = this.state;
     return (
     	<div className="RefundMenu">
 	      <Stepper activeStep={buy_step} orientation="vertical">
@@ -129,7 +145,7 @@ class RefundMenu extends Component {
 
 	      	<Step>
 	      		<StepLabel>
-	            	<h1>Select Refund Payment Option</h1>
+	            	<h1>{refund_channel != null && refund_channel != "" ? refund_channel : "Select Refund Payment Option"}</h1>
 	          	</StepLabel>
 	          	<StepContent>
 	          		<SelectRefundMethodStep refundStateUpdate={this.setState} />
