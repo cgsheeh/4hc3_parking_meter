@@ -24,17 +24,6 @@ import BuyMenu from './BuyMenu';
 import RefundMenu from './RefundMenu';
 
 
-class MainMenuHeader extends Component {
-  render() {
-    var { header_name } = this.props;
-    return (
-      <div className="MainMenuHeader">
-        <h1>{header_name}</h1>
-      </div>
-    )
-  }
-}
-
 class MainMenuBuy extends Component {
   render() {
     return (
@@ -89,10 +78,12 @@ class App extends Component {
       <MuiThemeProvider>
         <div className="App">
       
-          <MainMenuHeader header_name="Welcome to McMaster University"/>
           <MainMenuBuy />
           <MainMenuOptions />
           <BuyMenu />
+          <br />
+          <br />
+          <br />
           <RefundMenu />
       
         </div>
