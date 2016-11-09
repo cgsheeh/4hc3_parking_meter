@@ -32,7 +32,7 @@ class BarcodeEntry extends Component {
 			<div className="BarcodeEntry">
 				<TextField 
           			fullWidth={true}
-          			floatingLabelText="Enter your ticket barcode"
+          			floatingLabelText={this.props.input_text}
           			ref="barcode_entry"
           			onChange={this.save_barcode}
           			value={this.state.barcode}
