@@ -9,7 +9,10 @@ import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
 import FontIcon from 'material-ui/FontIcon';
 
+import BarcodeEntry from './BarcodeEntry';
+
 // Code for entering ticket information
+// TODO: can't advance unless correct barcode entered
 class EnterTicketInfoStep extends Component {
 	constructor(props) {
 		super(props);
@@ -25,27 +28,12 @@ class EnterTicketInfoStep extends Component {
 		});
 	}
 
-	saveBarcode = (event) => {
-		this.setState({
-			barcode: event.target.value,
-		});
-	}
-
 	render() {
 		return (
 			<div className="EnterTicketInfoStep">
-				<TextField 
-          			fullWidth={true}
-          			floatingLabelText="Enter your ticket barcode"
-          			ref="barcode_entry"
-          			onChange={this.saveBarcode}
-          			value={this.state.barcode}
-	          	/>
-	         	<RaisedButton 
-	         		label="Next" 
-	         		onClick={this.advance_refund_state} 
-	         	/>
-	         	<br />
+				<BarcodeEntry 
+					pass_barcode_function={this.retrieve_barcode}
+				/>
 	        </div>
 		);
 	}
@@ -60,23 +48,29 @@ class SelectRefundMethodStep extends Component {
 		}
 	}
 
-	// advance_refund_state = (event) => {
-	// 	if ()
-	// }
+	select_account() {
 
-	// handle_key_press() {
-	// 	if(event.)
-	// }
+	}
+
+	select_credit() {
+
+	}
+
+	select_cash = () => {
+		this.props.refundStateUpdate({
+			buy_step: 2,
+			refund_channel: 'Cash Refund',
+		});
+	}
 
 	render() {
 		return (
 			<div className="SelectRefundMethodStep">
 		         <RaisedButton 
 		         	label="Cash" 
-		         	onClick={this.cash_refund} 
+		         	onClick={this.select_cash} 
 		         	style={this.style.raisedButton}
 		         	ref="cash_refund_button"
-		         	onkeypress={this.handle_key_press}
 		         />
 		         <RaisedButton 
 		         	label="Credit" 
@@ -93,10 +87,17 @@ class SelectRefundMethodStep extends Component {
 	        </div>
 		);
 	}
+
 }
 
 // Code for refund confirmation page
 class ConfirmationStep extends Component {
+	style = {
+		raisedButton: {
+			margin: "10px"
+		}
+	}
+
 	advance_refund_state = () => {
 		this.props.refundStateUpdate({
 			buy_step: 0,
@@ -107,12 +108,17 @@ class ConfirmationStep extends Component {
 		return (
 			<div className="ConfirmationStep">
 	         <h1>ConfirmationStep Content</h1>
-	         <RaisedButton label="Next" onClick={this.advance_refund_state} />
+	         <RaisedButton 
+	         	label="Next" 
+	         	onClick={this.advance_refund_state} 
+	         	style={this.style.raisedButton}
+	         />
 	        </div>
 		);
 	}
 }
 
+// Code for Refund/Add menu
 class RefundMenu extends Component {
   constructor(props) {
     super(props);
@@ -121,11 +127,17 @@ class RefundMenu extends Component {
     this.setState = this.setState.bind(this);
     this.state = {
       buy_step: 0,
-      refund_method: null,
       account: null,
       barcode: null,
       refund_channel: null,
     };
+  }
+
+  get_barcode = (barcode) => {
+  	this.setState({
+  		barcode: barcode,
+  		buy_step: 1,
+  	});
   }
 
   render() {
@@ -138,8 +150,10 @@ class RefundMenu extends Component {
 	            	<h1>{barcode != null && barcode != "" ? "Barcode: " + barcode : "Enter ticket barcode"}</h1>
 	          	</StepLabel>
 	          	<StepContent>
-	          		<EnterTicketInfoStep refundStateUpdate={this.setState} />
-	          		<br />
+	          		<BarcodeEntry 
+	          			pass_barcode_value={this.get_barcode}
+	          		/>
+	          		<br/>
 	          	</StepContent>
 	      	</Step>
 
