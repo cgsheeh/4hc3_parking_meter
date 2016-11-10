@@ -13,6 +13,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
 class BuyMenu extends Component {
+  //constructor for the buymenu with all state variables initialized
   constructor(props) {
     super(props);
     this.state = {
@@ -27,6 +28,7 @@ class BuyMenu extends Component {
     };
   }
 
+  //function called upon clicking your payment method
   setPaymentType (event) {
     const {stepIndex} = this.state;
     this.setState({
@@ -37,6 +39,7 @@ class BuyMenu extends Component {
     console.log(event);
   };
 
+  //function called upon adding clicking on cash buttons, reduces amount due, increases amount paid
   insertCoin (event) {
     const {stepIndex} = this.state;
     var previousAmount = this.state.amountDue;
@@ -47,10 +50,10 @@ class BuyMenu extends Component {
       amountPaid: previousAmountPaid + event,
     });
 
-    console.log(event);
 
   };
 
+  //simple function to go to the previous step
   handlePrev = () => {
     const {stepIndex} = this.state;
     if (stepIndex > 0) {
@@ -61,15 +64,29 @@ class BuyMenu extends Component {
     console.log(this.state.amountPaid);
   };
 
-  get_barcode = (barcode) => {
+  //simple function to go to the next step
+  handleNext = () => {
     const {stepIndex} = this.state;
-    this.setState({
-      stepIndex: stepIndex + 1,
-      finished: stepIndex >= 2,
-      barCode: barcode,
-    });
+    if (stepIndex > 0) {
+      this.setState({stepIndex: stepIndex + 1});
+    }
+  };
+
+  //call is made to handle card number
+  //used to check against a debit, credit or account number
+  get_barcode = (barcode) => {
+    var debitCard = 12345;
+    var creditCard = 12345;
+    var accountNumber = 12345;
+    
+    if(barcode == debitCard || barcode == creditCard || barcode == accountNumber){
+        const {stepIndex} = this.state;
+        this.setState({amountDue: 0, stepIndex: stepIndex + 1});
+    }
+
   }
 
+  //this function gets called upon changing the value of time amount of time requested
   handleChange = (event, index, value) => {
     var d = new Date();
     this.setState({
@@ -78,12 +95,13 @@ class BuyMenu extends Component {
       amountDue: value*5,
     });
   }
-
+  //render the credit card buy menu
   renderCredit = () => {
     return (
       <div>
         <p>Pay by Credit Card!</p>
-        
+        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
           <SelectField
             floatingLabelText="Time Requested"
             fullWidth={true}
@@ -107,12 +125,13 @@ class BuyMenu extends Component {
       </div>
     );
   };
-
+  //render the debit card buy menu
   renderDebit = () => {
     return (
         <div>
         <p>Pay by Debit Card!</p>
-        
+        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
           <SelectField
             floatingLabelText="Time Requested"
             fullWidth={true}
@@ -136,7 +155,7 @@ class BuyMenu extends Component {
       </div>
     );
   };
-
+  //render the cash buy menu
   renderCoin = () => {
     return (
         <div>
@@ -155,95 +174,105 @@ class BuyMenu extends Component {
             <MenuItem value={60} primaryText="1 Hour" />
             <MenuItem value={1440} primaryText="All Day" />
           </SelectField>
-                <RaisedButton
-                  label={'$0.25'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(0.25)}
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'$1'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(1)}
+              <div>
+                  <RaisedButton
+                    label={'$0.25'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(0.25)}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={'$1'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(1)}
 
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'$2'}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={'$2'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(2)}
+                    style={{marginRight: 12}}
+                  />
+                  <br /><br />
+                  <RaisedButton
+                    label={'$5'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(5)}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={'$10'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(10)}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={'$20'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(20)}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label={'$50'}
+                    disableTouchRipple={true}
+                    disableFocusRipple={true}
+                    primary={true}
+                    onTouchTap={() => this.insertCoin(50)}
+                    style={{marginRight: 12}}
+                  />
+                  <p></p>
+                </div>
+                <FlatButton
+                  label="Next"
+                  disabled={this.state.amountDue != 0}
                   disableTouchRipple={true}
                   disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(2)}
-                  style={{marginRight: 12}}
-                />
-                
-                <RaisedButton
-                  label={'$5'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(5)}
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'$10'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(10)}
-                  style={{marginRight: 12}}
-                />
-                
-                <RaisedButton
-                  label={'$20'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(20)}
-                  style={{marginRight: 12}}
-                />
-                <p></p>
-                <RaisedButton
-                  label={'$50'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.insertCoin(50)}
-                  style={{marginRight: 12}}
+                  onTouchTap={this.handleNext}
                 />
       </div>
     );
   };
-
+  //render account buy menu blank right now
   renderAccount = () => {
     return (
         <p>This is the account screen.</p>
     );
   };
 
-renderStepActions(step) {
-    const {stepIndex} = this.state;
+  //Back button
+  renderStepActions(step) {
+      const {stepIndex} = this.state;
 
-    return (
-      <div style={{margin: '12px 0'}}>
-        {step > 0 && (
-          <FlatButton
-            label="Back"
-            disabled={stepIndex === 0}
-            disableTouchRipple={true}
-            disableFocusRipple={true}
-            onTouchTap={this.handlePrev}
-          />
-        )}
-      </div>
-    );
-  }
+      return (
+        <div style={{margin: '12px 0'}}>
+          {step > 0 && (
+            <FlatButton
+              label="Back"
+              disabled={stepIndex === 0}
+              disableTouchRipple={true}
+              disableFocusRipple={true}
+              onTouchTap={this.handlePrev}
+            />
+            
+          )}
+        </div>
+      );
+    }
 
-
+  //Entire stepper
 
   render() {
     const {finished, stepIndex} = this.state;
