@@ -90,7 +90,9 @@ class MainMenu extends Component {
   render_RefundMenu () {
     return (
       <div className="MainMenu">
-        <RefundMenu />
+        <RefundMenu 
+          return_home={this.home_clicked}
+        />
           <br />
           <br />
         <RaisedButton
@@ -124,7 +126,7 @@ class MainMenu extends Component {
         />
 
         <RaisedButton
-          label="Refund Money"
+          label="Edit existing ticket"
           labelPosition="before"
           primary={false}
           secondary={false}

@@ -165,15 +165,24 @@ class ConfirmationStep extends Component {
 
 	confirm_pressed = () => {
 		this.props.refundStateUpdate({
-			buy_step: 0,
-		});
+	      buy_step: 0,
+	      account: null,
+	      barcode: null,
+	      refund_channel: null,
+	      ticket_action: "",
+	      credit_card: "",
+    	});
 	}
 
 	back_pressed = () => {
 		this.props.refundStateUpdate({
-			buy_step: 0,
-			refund_channel: null,
-		});
+	      buy_step: 0,
+	      account: null,
+	      barcode: null,
+	      refund_channel: null,
+	      ticket_action: "",
+	      credit_card: "",
+    	});
 	}
 
 	render() {
@@ -184,7 +193,7 @@ class ConfirmationStep extends Component {
 	         <RaisedButton 
 	         	label="Confirm" 
 	         	backgroundColor="#a4c639"
-	         	onClick={this.confirm_pressed} 
+	         	onClick={this.props.return_home} 
 	         	style={this.style.raisedButton}
 	         	icon={<FontIcon className="material-icons">thumb_up</FontIcon>}
 	         	labelColor="#ffffff"
@@ -333,6 +342,7 @@ class RefundMenu extends Component {
 	      				amount="5"
 	      				payment_method={refund_channel}
 	      				ticket_action={ticket_action}
+	      				return_home={this.props.return_home}
 	      			/>
 	          	</StepContent>
 	      	</Step>
