@@ -138,8 +138,10 @@ class BuyMenu extends Component {
           <br />
         
         <BarcodeEntry
-         pass_barcode_value={this.get_barcode}
-         input_text="Enter Credit Card Number."
+           pass_barcode_value={this.get_barcode}
+           input_text="Enter Credit Card Number."
+           warning_text="Number must be 9-digits long"
+           required_length={9}
         />
         
         
@@ -168,8 +170,10 @@ class BuyMenu extends Component {
           <br />
         
         <BarcodeEntry
-         pass_barcode_value={this.get_barcode}
-         input_text="Enter Debit Card Number."
+           pass_barcode_value={this.get_barcode}
+           input_text="Enter Debit Card Number."
+           warning_text="Debit card number must be 10-digits long"
+           required_length={10}
         />
         
         
