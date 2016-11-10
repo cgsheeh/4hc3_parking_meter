@@ -66,7 +66,6 @@ class BuyMenu extends Component {
     var previousAmountPaid = this.state.amountPaid;
 
     this.setState({
-      amountDue: previousAmount - event,
       amountPaid: previousAmountPaid + event,
     });
 
@@ -112,11 +111,23 @@ class BuyMenu extends Component {
                 + currentdate.getHours() + ":"  
                 + currentdate.getMinutes() + ":" 
                 + currentdate.getSeconds();
-    console.log(value)
+    let _amountDue = '' 
+    if(value === '30 minutes') {
+      _amountDue = 5
+    }
+    else if (value === '1 hour') {
+      _amountDue = 10
+    }
+    else if (value === '5 hours') {
+      _amountDue = 20
+    }
+    else {
+      _amountDue = 30
+    }
     this.setState({
       timeAmount: value,
       timeStamp: datetime,
-      amountDue: value,
+      amountDue: _amountDue
     });
   }
   //render the credit card buy menu
@@ -133,10 +144,10 @@ class BuyMenu extends Component {
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={5} primaryText="30 Minutes" />
-            <MenuItem value={10} primaryText="1 Hour" />
-            <MenuItem value={20} primaryText="5 Hours" />
-            <MenuItem value={30} primaryText="All Day" />
+            <MenuItem value={'30 minutes'} primaryText="30 Minutes" />
+            <MenuItem value={'1 hour'} primaryText="1 Hour" />
+            <MenuItem value={'5 hours'} primaryText="5 Hours" />
+            <MenuItem value={'All Day'} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
         
@@ -158,17 +169,17 @@ class BuyMenu extends Component {
         <p style={{fontWeight:"bold"}}>Pay by Debit Card!</p>
         <p style={{display: "inline"}} >Amount Due: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
         <br />
-        <p style={{display: "inline"}} >Amount Paid: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <p style={{display: "inline"}} >Amount Paid: $</p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
         <br /><br />
           <SelectField
             fullWidth={false}
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={5} primaryText="30 Minutes" />
-            <MenuItem value={10} primaryText="1 Hour" />
-            <MenuItem value={20} primaryText="5 Hours" />
-            <MenuItem value={30} primaryText="All Day" />
+            <MenuItem value={'30 minutes'} primaryText="30 Minutes" />
+            <MenuItem value={'1 hour'} primaryText="1 Hour" />
+            <MenuItem value={'5 hours'} primaryText="5 Hours" />
+            <MenuItem value={'All Day'} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
         
@@ -197,10 +208,10 @@ class BuyMenu extends Component {
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={5} primaryText="30 Minutes" />
-            <MenuItem value={10} primaryText="1 Hour" />
-            <MenuItem value={20} primaryText="5 Hours" />
-            <MenuItem value={30} primaryText="All Day" />
+            <MenuItem value={'30 minutes'} primaryText="30 Minutes" />
+            <MenuItem value={'1 hour'} primaryText="1 Hour" />
+            <MenuItem value={'5 hours'} primaryText="5 Hours" />
+            <MenuItem value={'All Day'} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
 
@@ -267,7 +278,7 @@ class BuyMenu extends Component {
                 </div>
                 <RaisedButton
                   label="Next"
-                  disabled={this.state.amountDue > 0 || this.state.amountPaid === 0 || this.state.timeAmount === ''}
+                  disabled={this.state.amountDue > this.state.amountPaid || this.state.amountPaid === 0 || this.state.timeAmount === ''}
                   disableTouchRipple={true}
                   disableFocusRipple={true}
                   onTouchTap={this.handleNext}
@@ -309,6 +320,7 @@ class BuyMenu extends Component {
       purchase_confirm: false,
       print_confirm: false
     });
+    this.props.return_home()
   }
   //Back button
   renderStepActions(step) {
@@ -352,7 +364,7 @@ class BuyMenu extends Component {
           <RaisedButton
             label="Confirm Purchase"
             labelPosition="before"
-            secondary={true}
+            primary={true}
             icon={<FontIcon className="material-icons">directions_car</FontIcon>}
             style={styles.button}
             onClick={this.confirm_clicked}
@@ -460,21 +472,12 @@ class BuyMenu extends Component {
                   onTouchTap={() => this.setPaymentType("debit")}
                   style={{marginRight: 12}}
                 />
-                <p></p>
                 <RaisedButton
                   label={'Cash'}
                   disableTouchRipple={true}
                   disableFocusRipple={true}
                   primary={true}
                   onTouchTap={() => this.setPaymentType("coin")}
-                  style={{marginRight: 12}}
-                />
-                <RaisedButton
-                  label={'Spending Account'}
-                  disableTouchRipple={true}
-                  disableFocusRipple={true}
-                  primary={true}
-                  onTouchTap={() => this.setPaymentType("account")}
                   style={{marginRight: 12}}
                 />
               {this.renderStepActions(0)}

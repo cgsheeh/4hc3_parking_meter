@@ -99,14 +99,6 @@ class SelectRefundMethodStep extends Component {
 		         	ref="credit_refund_button"
 		         	icon={<FontIcon className="material-icons" style={this.style.icon}>credit_card</FontIcon>}
 		         />
-		         <RaisedButton
-		         	label="Account"
-		         	onClick={this.advance_refund_state}
-		         	primary={true}
-		         	style={this.style.raisedButton}
-		         	ref="account_refund_button"
-		         	icon={<FontIcon className="material-icons" style={this.style.icon}>account_circle</FontIcon>}
-		         />
 		        </div>
 		    );
 	}

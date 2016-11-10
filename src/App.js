@@ -90,7 +90,8 @@ class MainMenu extends Component {
     return (
       <div className="MainMenu">
         <div>
-          <BuyMenu />
+          <BuyMenu 
+            return_home={this.home_clicked} />
             <br />
             <br />
         </div>
