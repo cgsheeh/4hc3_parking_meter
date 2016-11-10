@@ -5,7 +5,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
-
 //
 import {
   Step,
@@ -30,8 +29,8 @@ import RefundMenu from './RefundMenu';
 const styles = {
   button: {
     margin: 12,
-    width: 400,
-    height: 100
+    width: 300,
+    height: 75
   },
   home: {
     margin: 6,
@@ -46,9 +45,9 @@ const styles = {
 const muiTheme = getMuiTheme({
   palette: {
     primary1Color: "#990033",
-    primary2Color: "#2173B3",
-    primary3Color: "#A9D2EB",
-    accent1Color: "#ED3B3B",
+    primary2Color: "#666666",
+    primary3Color: "#003399",
+    accent1Color: "#000000",
     accent2Color: "#ED2B2B",
     accent3Color: "#F58C8C"
   },
@@ -70,6 +69,7 @@ class MainMenu extends Component {
   home_clicked = () => {
     this.setState({
       menu: 'home',
+      isOpen: false
     });
   }
 
@@ -97,7 +97,7 @@ class MainMenu extends Component {
         <RaisedButton
           label="Home"
           labelPosition="before"
-          primary={false}
+          primary={true}
           secondary={false}
           icon={<FontIcon className="material-icons" style={styles.icon}>home</FontIcon>}
           style={styles.home}
@@ -113,14 +113,11 @@ class MainMenu extends Component {
         <RefundMenu 
           return_home={this.home_clicked}
         />
-
-          <br />
-          <br />
         </div>
         <RaisedButton
           label="Home"
           labelPosition="before"
-          primary={false}
+          primary={true}
           secondary={false}
           icon={<FontIcon className="material-icons" style={styles.icon}>home</FontIcon>}
           style={styles.home}
@@ -140,7 +137,7 @@ class MainMenu extends Component {
         <RaisedButton
           label="Purchase Ticket"
           labelPosition="before"
-          primary={false}
+          primary={true}
           secondary={false}
           icon={<FontIcon className="material-icons" style={styles.icon}>confirmation_number</FontIcon>}
           style={styles.button}
@@ -150,13 +147,16 @@ class MainMenu extends Component {
         <RaisedButton
           label="Edit existing ticket"
           labelPosition="before"
-          primary={false}
+          primary={true}
           secondary={false}
           icon={<FontIcon className="material-icons" style={styles.icon}>attach_money</FontIcon>}
           style={styles.button}
           onClick={this.refund_clicked}
         />
+
       </div>
+
+
         );
     }
   }
@@ -171,16 +171,6 @@ class MainMenuBuy extends Component {
     )
   }
 }
-
-class MainMenuOptions extends Component {
-  render() {
-    return (
-      <div className="MainMenuOptions">
-      </div>
-    )
-  }
-}
-
 
 class App extends Component {
   constructor(props) {
@@ -216,12 +206,7 @@ class App extends Component {
         <div className="App">
       
           <MainMenu />
-          <MainMenuOptions />
-          <br />
-          <br />
-          <br />
-
-      
+    
         </div>
       </MuiThemeProvider>
     );

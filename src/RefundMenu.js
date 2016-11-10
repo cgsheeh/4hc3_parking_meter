@@ -85,7 +85,8 @@ class SelectRefundMethodStep extends Component {
 		return (<div>
 		         <RaisedButton 
 		         	label="Cash" 
-		         	onClick={this.select_cash} 
+		         	onClick={this.select_cash}
+		         	primary={true}
 		         	style={this.style.raisedButton}
 		         	ref="cash_refund_button"
 		         	icon={<FontIcon className="material-icons" style={this.style.icon}>attach_money</FontIcon>}
@@ -93,6 +94,7 @@ class SelectRefundMethodStep extends Component {
 		         <RaisedButton 
 		         	label="Credit" 
 		         	onClick={this.select_credit} 
+		         	primary={true}
 		         	style={this.style.raisedButton}
 		         	ref="credit_refund_button"
 		         	icon={<FontIcon className="material-icons" style={this.style.icon}>credit_card</FontIcon>}
@@ -100,8 +102,10 @@ class SelectRefundMethodStep extends Component {
 		         <RaisedButton
 		         	label="Account"
 		         	onClick={this.advance_refund_state}
+		         	primary={true}
 		         	style={this.style.raisedButton}
 		         	ref="account_refund_button"
+		         	icon={<FontIcon className="material-icons" style={this.style.icon}>account_circle</FontIcon>}
 		         />
 		        </div>
 		    );
@@ -199,7 +203,7 @@ class ConfirmationStep extends Component {
 	         	labelColor="#ffffff"
 	         />
 	         <RaisedButton 
-	         	label="Go Back" 
+	         	label="Reset" 
 	         	secondary={true}
 	         	onClick={this.back_pressed} 
 	         	style={this.style.raisedButton}
@@ -215,8 +219,8 @@ class SelectTicketActionStep extends Component {
 	styles = {
 		button: {
 		    margin: 12,
-		    width: 400,
-		    height: 100,
+		    width: 300,
+		    height: 75
   		},
   		icon: {
     		marginRight: 24,

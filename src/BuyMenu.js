@@ -18,8 +18,8 @@ import Dialog from 'material-ui/Dialog';
 const styles = {
   button: {
     margin: 12,
-    width: 400,
-    height: 100
+    width: 300,
+    height: 75
   },
   home: {
     margin: 6,
@@ -27,7 +27,7 @@ const styles = {
     height: 60
   },
   icon: {
-    marginRight: 24,
+    marginRight: 0,
   }
 };
 
@@ -91,25 +91,32 @@ class BuyMenu extends Component {
 
   //call is made to handle card number
   //used to check against a debit, credit or account number
-  get_barcode = (barcode) => {
-    var debitCard = 12345;
-    var creditCard = 12345;
-    var accountNumber = 12345;
-    
-    if(barcode === debitCard || barcode === creditCard || barcode === accountNumber){
-        const {stepIndex} = this.state;
-        this.setState({amountDue: 0, stepIndex: stepIndex + 1});
-    }
-
+  get_barcode = (barcode) => { 
+        if (this.state.timeAmount !== '') {
+          const {stepIndex} = this.state;
+          if (this.state.amountPaid === 0) {
+            this.setState({
+              amountPaid: this.state.amountDue
+            })
+          }
+          this.setState({amountDue: 0, stepIndex: stepIndex + 1});
+        }
   }
 
   //this function gets called upon changing the value of time amount of time requested
   handleChange = (event, index, value) => {
-    var d = new Date();
+    var currentdate = new Date(); 
+    var datetime = currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+    console.log(value)
     this.setState({
       timeAmount: value,
-      timeStamp: d,
-      amountDue: value*5,
+      timeStamp: datetime,
+      amountDue: value,
     });
   }
   //render the credit card buy menu
@@ -126,11 +133,10 @@ class BuyMenu extends Component {
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={15} primaryText="15 Minutes" />
-            <MenuItem value={30} primaryText="30 Minutes" />
-            <MenuItem value={45} primaryText="45 Minutes" />
-            <MenuItem value={60} primaryText="1 Hour" />
-            <MenuItem value={1440} primaryText="All Day" />
+            <MenuItem value={5} primaryText="30 Minutes" />
+            <MenuItem value={10} primaryText="1 Hour" />
+            <MenuItem value={20} primaryText="5 Hours" />
+            <MenuItem value={30} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
         
@@ -149,7 +155,7 @@ class BuyMenu extends Component {
   renderDebit = () => {
     return (
         <div>
-        <p style={{fontWeight:"bold"}}>Pay by Credit Card!</p>
+        <p style={{fontWeight:"bold"}}>Pay by Debit Card!</p>
         <p style={{display: "inline"}} >Amount Due: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
         <br />
         <p style={{display: "inline"}} >Amount Paid: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
@@ -159,11 +165,10 @@ class BuyMenu extends Component {
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={15} primaryText="15 Minutes" />
-            <MenuItem value={30} primaryText="30 Minutes" />
-            <MenuItem value={45} primaryText="45 Minutes" />
-            <MenuItem value={60} primaryText="1 Hour" />
-            <MenuItem value={1440} primaryText="All Day" />
+            <MenuItem value={5} primaryText="30 Minutes" />
+            <MenuItem value={10} primaryText="1 Hour" />
+            <MenuItem value={20} primaryText="5 Hours" />
+            <MenuItem value={30} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
         
@@ -182,19 +187,20 @@ class BuyMenu extends Component {
   renderCoin = () => {
     return (
         <div>
-        <p>Pay by Cash!</p>
-        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
-        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <p style={{fontWeight:"bold"}}>Pay by Cash!</p>
+        <p style={{display: "inline"}} >Amount Due: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <br />
+        <p style={{display: "inline"}} >Amount Paid: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <br /><br />
           <SelectField
             fullWidth={true}
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
-            <MenuItem value={15} primaryText="15 Minutes" />
-            <MenuItem value={30} primaryText="30 Minutes" />
-            <MenuItem value={45} primaryText="45 Minutes" />
-            <MenuItem value={60} primaryText="1 Hour" />
-            <MenuItem value={1440} primaryText="All Day" />
+            <MenuItem value={5} primaryText="30 Minutes" />
+            <MenuItem value={10} primaryText="1 Hour" />
+            <MenuItem value={20} primaryText="5 Hours" />
+            <MenuItem value={30} primaryText="All Day" />
           </SelectField>
           <p style={{fontWeight:"bold"}}> Time Requested </p>
 
@@ -259,9 +265,9 @@ class BuyMenu extends Component {
                   />
                   <p></p>
                 </div>
-                <FlatButton
+                <RaisedButton
                   label="Next"
-                  disabled={this.state.amountDue !== 0}
+                  disabled={this.state.amountDue > 0 || this.state.amountPaid === 0 || this.state.timeAmount === ''}
                   disableTouchRipple={true}
                   disableFocusRipple={true}
                   onTouchTap={this.handleNext}
@@ -309,19 +315,24 @@ class BuyMenu extends Component {
     const {stepIndex} = this.state;
 
     const customContentStyle = {
-      width: '100%',
       maxWidth: 'none',
-      height: '100%',
-      maxHieght: 'none'
+      margin: 'auto',
     };
+
+    const customBodyStyle = {
+        position: 'relative',
+        margin: 'auto',
+        textAlign: 'center',
+    }
 
     const dialog_actions = [
       <FlatButton
         label="Back"
         primary={true}
         onClick={this.cancel_clicked}
+        style={{paddingRight:'20px'}}
       />,
-      <FlatButton
+      <RaisedButton
         label="Print"
         primary={true}
         onClick={this.print_clicked}
@@ -341,8 +352,7 @@ class BuyMenu extends Component {
           <RaisedButton
             label="Confirm Purchase"
             labelPosition="before"
-            primary={false}
-            secondary={false}
+            secondary={true}
             icon={<FontIcon className="material-icons">directions_car</FontIcon>}
             style={styles.button}
             onClick={this.confirm_clicked}
@@ -350,27 +360,32 @@ class BuyMenu extends Component {
 
           <Dialog
           title="Purchase Confirmation"
+          titleStyle={{textAlign:'center'}}
           autoDetectWindowHeight={true}
           actions={dialog_actions}
           modal={true}
           open={this.state.purchase_confirm}
           onRequestClose={this.cancel_clicked}
           contentStyle={customContentStyle}
-        >       
-          <img src="images/avatar.png" alt=""/>
-          <br />
-          Parking time: {this.state.timeAmount}
-          <br />
-          Amount Paid: {this.state.amountPaid}
-          <br />
-          {this.state.barCode}
-          <br />
-          <img src="images/barcode.jpeg" alt=""/>
-
-
+          bodyStyle={customBodyStyle}
+        >
+          <div style={{border: "2px solid #a1a1a1", background: "white", padding: "10px 40px", borderRadius: "25px"}}>
+            <img src="images/avatar.png" alt=""/>
+            <br />
+            Parking time: {this.state.timeAmount}
+            <br />
+            Amount Paid: {this.state.amountPaid}
+            <br />
+            Time of Purchase: {this.state.timeStamp}
+            <br />
+            {this.state.barCode}
+            <br />
+            <img src="images/barcode.jpg" alt=""/>
+          </div>
         </Dialog>
         <Dialog
           title="Ticket Successfully Printed!"
+          titleStyle={{textAlign:'center'}}
           autoDetectWindowHeight={true}
           actions={
             <FlatButton
@@ -380,6 +395,7 @@ class BuyMenu extends Component {
             />
           }
           contentStyle={customContentStyle}
+          bodyStyle={customBodyStyle}
           modal={true}
           open={this.state.print_confirm}
           onRequestClose={this.cancel_clicked}
@@ -388,8 +404,6 @@ class BuyMenu extends Component {
           <RaisedButton
             label="Cancel Purchase"
             labelPosition="before"
-            primary={false}
-            secondary={false}
             icon={<FontIcon className="material-icons">money_off</FontIcon>}
             style={styles.button}
             onClick={this.cancel_clicked}
@@ -401,7 +415,7 @@ class BuyMenu extends Component {
       return (
         <div style={{margin: '12px 0'}}>
           {step > 0 && (
-            <FlatButton
+            <RaisedButton
               label="Back"
               disabled={stepIndex === 0}
               disableTouchRipple={true}
@@ -436,7 +450,6 @@ class BuyMenu extends Component {
                   disableFocusRipple={true}
                   primary={true}
                   onTouchTap={() => this.setPaymentType("credit")}
-
                   style={{marginRight: 12}}
                 />
                 <RaisedButton
