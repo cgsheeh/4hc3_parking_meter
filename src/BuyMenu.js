@@ -11,6 +11,25 @@ import FlatButton from 'material-ui/FlatButton';
 import BarcodeEntry from './BarcodeEntry';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import FontIcon from 'material-ui/FontIcon';
+import ActionAndroid from 'material-ui/svg-icons/action/android';
+import Dialog from 'material-ui/Dialog';
+
+const styles = {
+  button: {
+    margin: 12,
+    width: 400,
+    height: 100
+  },
+  home: {
+    margin: 6,
+    width: 200,
+    height: 60
+  },
+  icon: {
+    marginRight: 24,
+  }
+};
 
 class BuyMenu extends Component {
   //constructor for the buymenu with all state variables initialized
@@ -25,6 +44,8 @@ class BuyMenu extends Component {
       timeStamp: '',
       amountPaid: 0,
       amountDue: 0,
+      print_confirm: false,
+      purchase_confirm: false
     };
   }
 
@@ -252,9 +273,127 @@ class BuyMenu extends Component {
     );
   };
 
+  confirm_clicked = () => {
+    const {stepIndex} = this.state;
+    this.setState({
+      purchase_confirm: true
+    });
+  }
+  print_clicked = () => {
+    const {stepIndex} = this.state;
+    this.setState({
+      print_confirm: true,
+      purchase_fonfirm: false
+    });
+  }
+  cancel_clicked = () => {
+    const {stepIndex} = this.state;
+    this.setState({
+      finished: false,
+      stepIndex: 0,
+      paymentType: '',
+      barCode: '',
+      timeAmount: '',
+      timeStamp: '',
+      amountPaid: 0,
+      amountDue: 0,
+      purchase_confirm: false,
+      print_confirm: false
+    });
+  }
   //Back button
   renderStepActions(step) {
-      const {stepIndex} = this.state;
+    const {stepIndex} = this.state;
+
+    const customContentStyle = {
+      width: '100%',
+      maxWidth: 'none',
+      height: '100%',
+      maxHieght: 'none'
+    };
+
+    const dialog_actions = [
+      <FlatButton
+        label="Back"
+        primary={true}
+        onClick={this.cancel_clicked}
+      />,
+      <FlatButton
+        label="Print"
+        primary={true}
+        onClick={this.print_clicked}
+      />,
+    ];
+
+
+    if (step == 2){
+      if (this.state.barCode == ""){
+        const {stepIndex} = this.state;
+        this.setState({
+          barCode: Math.floor(Math.random() * (1000000000000))
+        });
+      }
+      return (
+        <div>
+          <RaisedButton
+            label="Confirm Purchase"
+            labelPosition="before"
+            primary={false}
+            secondary={false}
+            icon={<FontIcon className="material-icons">directions_car</FontIcon>}
+            style={styles.button}
+            onClick={this.confirm_clicked}
+          />
+
+          <Dialog
+          title="Purchase Confirmation"
+          autoDetectWindowHeight={true}
+          actions={dialog_actions}
+          modal={true}
+          open={this.state.purchase_confirm}
+          onRequestClose={this.cancel_clicked}
+          contentStyle={customContentStyle}
+        >       
+          <img src="images/avatar.png" alt=""/>
+          <br />
+          Parking time: {this.state.timeAmount}
+          <br />
+          Amount Paid: {this.state.amountPaid}
+          <br />
+          {this.state.barCode}
+          <br />
+          <img src="images/barcode.jpeg" alt=""/>
+
+
+        </Dialog>
+        <Dialog
+          title="Ticket Successfully Printed!"
+          autoDetectWindowHeight={true}
+          actions={
+            <FlatButton
+              label="Return"
+              primary={true}
+              onClick={this.cancel_clicked}
+            />
+          }
+          contentStyle={customContentStyle}
+          modal={true}
+          open={this.state.print_confirm}
+          onRequestClose={this.cancel_clicked}
+        >
+        </Dialog>
+          <RaisedButton
+            label="Cancel Purchase"
+            labelPosition="before"
+            primary={false}
+            secondary={false}
+            icon={<FontIcon className="material-icons">money_off</FontIcon>}
+            style={styles.button}
+            onClick={this.cancel_clicked}
+          />
+        </div>
+      );
+    }
 
       return (
         <div style={{margin: '12px 0'}}>
@@ -339,10 +478,6 @@ class BuyMenu extends Component {
             <StepLabel>Confirm Payment</StepLabel>
             <StepContent>
               <p>
-                Try out different ad text to see what brings in the most customers,
-                and learn how to enhance your ads using features like ad extensions.
-                If you run into any problems with your ads, find out how to tell if
-                they're running and how to resolve approval issues.
               </p>
               {this.renderStepActions(2)}
             </StepContent>
@@ -357,8 +492,8 @@ class BuyMenu extends Component {
                 this.setState({stepIndex: 0, finished: false});
               }}
             >
-              Click here
-            </a> to reset the example.
+
+            </a> 
           </p>
         )}
       </div>
