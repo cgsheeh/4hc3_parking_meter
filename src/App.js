@@ -126,7 +126,7 @@ class MainMenu extends Component {
         />
 
         <RaisedButton
-          label="Refund Money"
+          label="Edit existing ticket"
           labelPosition="before"
           primary={false}
           secondary={false}
