@@ -9,7 +9,8 @@ import {
 } from 'material-ui/Stepper';
 import FlatButton from 'material-ui/FlatButton';
 import BarcodeEntry from './BarcodeEntry';
-
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 
 class BuyMenu extends Component {
   constructor(props) {
@@ -19,6 +20,8 @@ class BuyMenu extends Component {
       stepIndex: 0,
       paymentType: '',
       barCode: '',
+      timeAmount: '',
+      timeStamp: '',
       amountPaid: 0,
       amountDue: 0,
     };
@@ -34,37 +37,185 @@ class BuyMenu extends Component {
     console.log(event);
   };
 
+  insertCoin (event) {
+    const {stepIndex} = this.state;
+    var previousAmount = this.state.amountDue;
+    var previousAmountPaid = this.state.amountPaid;
+
+    this.setState({
+      amountDue: previousAmount - event,
+      amountPaid: previousAmountPaid + event,
+    });
+
+    console.log(event);
+
+  };
+
   handlePrev = () => {
     const {stepIndex} = this.state;
     if (stepIndex > 0) {
       this.setState({stepIndex: stepIndex - 1});
     }
+    console.log(this.state.timeAmount);
+    console.log(this.state.timeStamp);
+    console.log(this.state.amountPaid);
   };
 
   get_barcode = (barcode) => {
-    console.log(barcode);
+    const {stepIndex} = this.state;
+    this.setState({
+      stepIndex: stepIndex + 1,
+      finished: stepIndex >= 2,
+      barCode: barcode,
+    });
+  }
+
+  handleChange = (event, index, value) => {
+    var d = new Date();
+    this.setState({
+      timeAmount: value,
+      timeStamp: d,
+      amountDue: value*5,
+    });
   }
 
   renderCredit = () => {
     return (
       <div>
+        <p>Pay by Credit Card!</p>
+        
+          <SelectField
+            floatingLabelText="Time Requested"
+            fullWidth={true}
+            value={this.state.timeAmount}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={15} primaryText="15 Minutes" />
+            <MenuItem value={30} primaryText="30 Minutes" />
+            <MenuItem value={45} primaryText="45 Minutes" />
+            <MenuItem value={60} primaryText="1 Hour" />
+            <MenuItem value={1440} primaryText="All Day" />
+          </SelectField>
+          <br />
+        
         <BarcodeEntry
          pass_barcode_value={this.get_barcode}
+         input_text="Enter Credit Card Number."
         />
-        <p>Hello credit!</p>
+        
+        
       </div>
     );
   };
 
   renderDebit = () => {
     return (
-        <p>This is the debit screen.</p>
+        <div>
+        <p>Pay by Debit Card!</p>
+        
+          <SelectField
+            floatingLabelText="Time Requested"
+            fullWidth={true}
+            value={this.state.timeAmount}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={15} primaryText="15 Minutes" />
+            <MenuItem value={30} primaryText="30 Minutes" />
+            <MenuItem value={45} primaryText="45 Minutes" />
+            <MenuItem value={60} primaryText="1 Hour" />
+            <MenuItem value={1440} primaryText="All Day" />
+          </SelectField>
+          <br />
+        
+        <BarcodeEntry
+         pass_barcode_value={this.get_barcode}
+         input_text="Enter Debit Card Number."
+        />
+        
+        
+      </div>
     );
   };
 
   renderCoin = () => {
     return (
-        <p>This is the coin screen.</p>
+        <div>
+        <p>Pay by Cash!</p>
+        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+          <SelectField
+            floatingLabelText="Time Requested"
+            fullWidth={true}
+            value={this.state.timeAmount}
+            onChange={this.handleChange}
+          >
+            <MenuItem value={15} primaryText="15 Minutes" />
+            <MenuItem value={30} primaryText="30 Minutes" />
+            <MenuItem value={45} primaryText="45 Minutes" />
+            <MenuItem value={60} primaryText="1 Hour" />
+            <MenuItem value={1440} primaryText="All Day" />
+          </SelectField>
+                <RaisedButton
+                  label={'$0.25'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(0.25)}
+                  style={{marginRight: 12}}
+                />
+                <RaisedButton
+                  label={'$1'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(1)}
+
+                  style={{marginRight: 12}}
+                />
+                <RaisedButton
+                  label={'$2'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(2)}
+                  style={{marginRight: 12}}
+                />
+                
+                <RaisedButton
+                  label={'$5'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(5)}
+                  style={{marginRight: 12}}
+                />
+                <RaisedButton
+                  label={'$10'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(10)}
+                  style={{marginRight: 12}}
+                />
+                
+                <RaisedButton
+                  label={'$20'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(20)}
+                  style={{marginRight: 12}}
+                />
+                <p></p>
+                <RaisedButton
+                  label={'$50'}
+                  disableTouchRipple={true}
+                  disableFocusRipple={true}
+                  primary={true}
+                  onTouchTap={() => this.insertCoin(50)}
+                  style={{marginRight: 12}}
+                />
+      </div>
     );
   };
 
