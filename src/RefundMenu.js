@@ -46,11 +46,13 @@ class EnterTicketInfoStep extends Component {
 
 // Code for selecting how to receive the refund
 class SelectRefundMethodStep extends Component {
-
 	style = {
 		raisedButton: {
 			margin: "10px"
-		}
+		},
+		icon: {
+    		marginRight: 24,
+  		},
 	}
 
 	constructor(props) {
@@ -86,12 +88,14 @@ class SelectRefundMethodStep extends Component {
 		         	onClick={this.select_cash} 
 		         	style={this.style.raisedButton}
 		         	ref="cash_refund_button"
+		         	icon={<FontIcon className="material-icons" style={this.style.icon}>attach_money</FontIcon>}
 		         />
 		         <RaisedButton 
 		         	label="Credit" 
 		         	onClick={this.select_credit} 
 		         	style={this.style.raisedButton}
 		         	ref="credit_refund_button"
+		         	icon={<FontIcon className="material-icons" style={this.style.icon}>credit_card</FontIcon>}
 		         />
 		         <RaisedButton
 		         	label="Account"
