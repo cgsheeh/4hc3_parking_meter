@@ -9,6 +9,10 @@ import TextField from 'material-ui/TextField';
 // 	warning_text: warning text about the validator fxn
 // 	required_length: required length of the barcode
 class BarcodeEntry extends Component {
+	style = {
+		margin: "10px",
+	}
+
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -21,7 +25,7 @@ class BarcodeEntry extends Component {
 	// Checks if the current value is valid
 	save_barcode = (event) => {
 		let barcode_value = event.target.value;
-		if(barcode_value != this.props.required_length) {
+		if(barcode_value.length == this.props.required_length) {
 			this.setState({disabled: false,});
 		} else {
 			this.setState({disabled: true,});
@@ -32,7 +36,7 @@ class BarcodeEntry extends Component {
 	}
 
 	generate_n_digit_num = () => {
-		return Math.floor(100000000 + Math.random() * 100000000 * this.props.required_length);
+		return Math.random().toString().slice(2, 2 + this.props.required_length);
 	}
 
 	// onClick callback when next is clicked (ie barcode is valid and submitted)
@@ -63,10 +67,12 @@ class BarcodeEntry extends Component {
 	         		label="Next" 
 	         		onClick={this.submit_barcode} 
 	         		disabled={this.state.disabled}
+	         		style={this.style}
 	         	/>
 	         	<RaisedButton
 	         		label="Scan"
 	         		onClick={this.scan}
+	         		style={this.style}
 	         	/>
 	         	<br />
 			</div>

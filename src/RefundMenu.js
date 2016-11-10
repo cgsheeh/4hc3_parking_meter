@@ -3,6 +3,7 @@ import {
   Stepper,
   StepLabel,
   StepContent,
+  StepButton,
 } from 'material-ui/Stepper';
 import RaisedButton  from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
@@ -20,10 +21,6 @@ class EnterTicketInfoStep extends Component {
 			barcode: "",
 			warning_text: "",
 		};
-	}
-
-	must_be_7_digit = (barcode) => {
-		return barcode != "" && barcode != null && barcode.length == 7;
 	}
 
 	next_pressed = (barcode) => {
@@ -77,8 +74,8 @@ class SelectRefundMethodStep extends Component {
 
 	select_cash = () => {
 		this.props.refundStateUpdate({
-			buy_step: 2,
-			refund_channel: 'Cash Refund',
+			buy_step: 3,
+			refund_channel: 'Cash',
 		});
 	}
 
@@ -108,7 +105,7 @@ class SelectRefundMethodStep extends Component {
 
 	credit_card_entered = (barcode) => {
 		this.props.refundStateUpdate({
-			buy_step: 2,
+			buy_step: 3,
 			credit_card: barcode,
 			refund_channel: 'credit card',
 		})
@@ -129,6 +126,7 @@ class SelectRefundMethodStep extends Component {
 
 	render() {
 		let { refund_type } = this.state;
+		let { ticket_action } = this.props;
 		let selective_menu = "";
 		if(refund_type == 'credit'){
 			selective_menu = this.render_credit_menu();
@@ -144,7 +142,7 @@ class SelectRefundMethodStep extends Component {
 		return (
 			<div className="SelectRefundMethodStep">
 				<div>
-					<h3>McMaster will refund $5 on your ticket.<br /> How would you like to receive your payment?</h3>
+					<h3>McMaster will {ticket_action} $5 on your ticket.<br /> How would you like to receive your payment?</h3>
 				</div>
 				{selective_menu}
 	        </div>
@@ -169,16 +167,16 @@ class ConfirmationStep extends Component {
 
 	back_pressed = () => {
 		this.props.refundStateUpdate({
-			buy_step: 1,
+			buy_step: 0,
 			refund_channel: null,
 		});
 	}
 
 	render() {
-		let { amount, payment_method } = this.props;
+		let { amount, payment_method, ticket_action } = this.props;
 		return (
 			<div className="ConfirmationStep">
-	         <h1>You will receive ${amount} via {payment_method}.</h1>
+	         <h1>We will {ticket_action} ${amount} via {payment_method}.</h1>
 	         <RaisedButton 
 	         	label="Confirm" 
 	         	backgroundColor="#a4c639"
@@ -197,6 +195,59 @@ class ConfirmationStep extends Component {
 	         />
 	        </div>
 		);
+	}
+}
+
+class SelectTicketActionStep extends Component {
+	styles = {
+		button: {
+		    margin: 12,
+		    width: 400,
+		    height: 100,
+  		},
+  		icon: {
+    		marginRight: 24,
+  		},
+	}
+
+	refund_clicked = () => {
+		this.props.refundStateUpdate({
+			buy_step: 2,
+			ticket_action: "Refund",
+		});
+	}
+
+	purchase_clicked = () => {
+		this.props.refundStateUpdate({
+			buy_step: 2,
+			ticket_action: "Add",
+		});
+	}
+
+	render() {
+		return (
+			<div className="SelectTicketActionStep">
+		        <RaisedButton
+		          label="Add Time to Ticket"
+		          labelPosition="before"
+		          primary={false}
+		          secondary={false}
+		          icon={<FontIcon className="material-icons" style={this.styles.icon}>confirmation_number</FontIcon>}
+		          style={this.styles.button}
+		          onClick={this.purchase_clicked}
+		        />
+
+		        <RaisedButton
+		          label="Refund Ticket"
+		          labelPosition="before"
+		          primary={false}
+		          secondary={false}
+		          icon={<FontIcon className="material-icons" style={this.styles.icon}>attach_money</FontIcon>}
+		          style={this.styles.button}
+		          onClick={this.refund_clicked}
+        		/>
+      		</div>
+		)
 	}
 }
 
@@ -221,12 +272,18 @@ class RefundMenu extends Component {
     var { buy_step, barcode, refund_channel, credit_card, ticket_action } = this.state;
     return ( 
     	<div className="RefundMenu">
-    	  <h1>Refund a Ticket</h1>
 	      <Stepper activeStep={buy_step} orientation="vertical">
 	      	<Step>
-	      		<StepLabel>
+	      		<StepButton onClick={() => this.setState({
+	      			buy_step: 0,
+				      account: null,
+				      barcode: null,
+				      refund_channel: null,
+				      ticket_action: "",
+				      credit_card: "",
+				  })}>
 	            	<h1>{barcode != null && barcode != "" ? "Barcode: " + barcode : "Enter ticket barcode"}</h1>
-	          	</StepLabel>
+	          	</StepButton>
 	          	<StepContent>
 	          		<EnterTicketInfoStep refundStateUpdate={this.setState} />
 	          		<br/>
@@ -234,32 +291,44 @@ class RefundMenu extends Component {
 	      	</Step>
 
 	      	<Step>
-	      		<StepLabel>
+	      		<StepButton onClick={() => this.setState({
+	      			buy_step: 1,
+	      			account: null,
+	      			refund_channel: null,
+	      			ticket_action: "",
+	      			credit_card: "",
+	      		})}>
 	      			<h1>{ticket_action != null && ticket_action != "" ? ticket_action : "Select Ticket Action"}</h1>
-	      		</StepLabel>
+	      		</StepButton>
 	      		<StepContent>
-	      			<h1>Select the action your would like to take on your ticket</h1>
+	      			<SelectTicketActionStep refundStateUpdate={this.setState} />
 	      		</StepContent>
 	      	</Step>
 
 	      	<Step>
-	      		<StepLabel>
+	      		<StepButton onClick={() => this.setState({
+	      			buy_step: 2,
+	      		})}>
 	            	<h1>{refund_channel != null && refund_channel != "" ? refund_channel + " " + credit_card : "Select Payment Option"}</h1>
-	          	</StepLabel>
+	          	</StepButton>
 	          	<StepContent>
-	          		<SelectRefundMethodStep refundStateUpdate={this.setState} />
+	          		<SelectRefundMethodStep 
+	          			refundStateUpdate={this.setState}
+	          			ticket_action={ticket_action} 
+	          		/>
 	          	</StepContent>
 	      	</Step>
 
 	      	<Step>
 	      		<StepLabel>
-	            	<h1>Confirm Refund</h1>
+	            	<h1>Confirm Action</h1>
 	          	</StepLabel>
 	          	<StepContent>
 	      			<ConfirmationStep 
 	      				refundStateUpdate={this.setState}
 	      				amount="5"
 	      				payment_method={refund_channel}
+	      				ticket_action={ticket_action}
 	      			/>
 	          	</StepContent>
 	      	</Step>
