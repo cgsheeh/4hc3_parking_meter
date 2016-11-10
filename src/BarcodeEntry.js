@@ -1,7 +1,7 @@
 import RaisedButton  from 'material-ui/RaisedButton';
 import React, { Component } from 'react';
 import TextField from 'material-ui/TextField';
-
+import DialogNumberPad from './DialogNumberPad'; 
 
 // Properties:
 // 	input_text: default text of the entry field
@@ -18,13 +18,19 @@ class BarcodeEntry extends Component {
 		this.state = {
 			barcode: "",
 			disabled: true,
+			isOpen: false
 		};
 	}
 
 	// Saves the barcode after each keypress
 	// Checks if the current value is valid
 	save_barcode = (event) => {
-		let barcode_value = event.target.value;
+		let barcode_value = ''
+		if (event.target === 'undefined') {
+			barcode_value = event.target.value;
+		} else {
+			barcode_value = event
+		}
 		if(barcode_value.length == this.props.required_length) {
 			this.setState({disabled: false,});
 		} else {
@@ -52,26 +58,51 @@ class BarcodeEntry extends Component {
 		});
 	}
 
+	changeOpen = () => {
+	    this.setState({
+	      isOpen: true
+	    })
+	  }
+
+	  closeDialog = () => {
+	    this.setState({
+	      isOpen: false,
+	      barcode: this.refs.numPadBarcode.getValue()
+	    })
+	    this.refs.numPadBarcode.clearValue()
+	    this.save_barcode(this.refs.numPadBarcode.getValue())
+	  }
+
 	render() {
 		return (
 			<div className="BarcodeEntry">
-				<TextField 
-          			fullWidth={true}
-          			floatingLabelText={this.props.input_text}
-          			ref="barcode_entry"
-          			onChange={this.save_barcode}
-          			value={this.state.barcode}
-          			errorText={this.state.disabled ? this.props.warning_text : ""}
-	          	/>
+				<div>
+					<TextField 
+	          			fullWidth={true}
+	          			floatingLabelText={this.props.input_text}
+	          			ref="barcode_entry"
+	          			onClick={this.changeOpen}
+	          			onChange={this.save_barcode}
+	          			value={this.state.barcode}
+	          			errorText={this.state.disabled ? this.props.warning_text : ""}
+		          	/>
+			        <DialogNumberPad
+			          ref='numPadBarcode'
+			          isPadOpen={this.state.isOpen}
+			          closeDialog={this.closeDialog}
+			        />
+	          	</div>
 	         	<RaisedButton 
 	         		label="Next" 
 	         		onClick={this.submit_barcode} 
 	         		disabled={this.state.disabled}
+	         		primary={true}
 	         		style={this.style}
 	         	/>
 	         	<RaisedButton
 	         		label="Scan"
 	         		onClick={this.scan}
+	         		primary={true}
 	         		style={this.style}
 	         	/>
 	         	<br />
