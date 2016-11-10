@@ -57,7 +57,6 @@ class BuyMenu extends Component {
       finished: stepIndex >= 2,
       paymentType: event,
     });
-    console.log(event);
   };
 
   //function called upon adding clicking on cash buttons, reduces amount due, increases amount paid
@@ -80,9 +79,6 @@ class BuyMenu extends Component {
     if (stepIndex > 0) {
       this.setState({stepIndex: stepIndex - 1});
     }
-    console.log(this.state.timeAmount);
-    console.log(this.state.timeStamp);
-    console.log(this.state.amountPaid);
   };
 
   //simple function to go to the next step
@@ -100,7 +96,7 @@ class BuyMenu extends Component {
     var creditCard = 12345;
     var accountNumber = 12345;
     
-    if(barcode == debitCard || barcode == creditCard || barcode == accountNumber){
+    if(barcode === debitCard || barcode === creditCard || barcode === accountNumber){
         const {stepIndex} = this.state;
         this.setState({amountDue: 0, stepIndex: stepIndex + 1});
     }
@@ -120,12 +116,13 @@ class BuyMenu extends Component {
   renderCredit = () => {
     return (
       <div>
-        <p>Pay by Credit Card!</p>
-        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
-        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <p style={{fontWeight:"bold"}}>Pay by Credit Card!</p>
+        <p style={{display: "inline"}} >Amount Due: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <br />
+        <p style={{display: "inline"}} >Amount Paid: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <br /><br />
           <SelectField
-            floatingLabelText="Time Requested"
-            fullWidth={true}
+            fullWidth={false}
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
@@ -135,7 +132,7 @@ class BuyMenu extends Component {
             <MenuItem value={60} primaryText="1 Hour" />
             <MenuItem value={1440} primaryText="All Day" />
           </SelectField>
-          <br />
+          <p style={{fontWeight:"bold"}}> Time Requested </p>
         
         <BarcodeEntry
            pass_barcode_value={this.get_barcode}
@@ -152,12 +149,13 @@ class BuyMenu extends Component {
   renderDebit = () => {
     return (
         <div>
-        <p>Pay by Debit Card!</p>
-        <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
-        <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <p style={{fontWeight:"bold"}}>Pay by Credit Card!</p>
+        <p style={{display: "inline"}} >Amount Due: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
+        <br />
+        <p style={{display: "inline"}} >Amount Paid: </p> <p style={{display: "inline", fontWeight:"bold"}}> {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
+        <br /><br />
           <SelectField
-            floatingLabelText="Time Requested"
-            fullWidth={true}
+            fullWidth={false}
             value={this.state.timeAmount}
             onChange={this.handleChange}
           >
@@ -167,7 +165,7 @@ class BuyMenu extends Component {
             <MenuItem value={60} primaryText="1 Hour" />
             <MenuItem value={1440} primaryText="All Day" />
           </SelectField>
-          <br />
+          <p style={{fontWeight:"bold"}}> Time Requested </p>
         
         <BarcodeEntry
            pass_barcode_value={this.get_barcode}
@@ -188,7 +186,6 @@ class BuyMenu extends Component {
         <p>Amount Due {this.state.amountDue === 0 ? 0: this.state.amountDue}</p>
         <p>Amount Paid {this.state.amountPaid === 0 ? 0: this.state.amountPaid}</p>
           <SelectField
-            floatingLabelText="Time Requested"
             fullWidth={true}
             value={this.state.timeAmount}
             onChange={this.handleChange}
@@ -199,6 +196,8 @@ class BuyMenu extends Component {
             <MenuItem value={60} primaryText="1 Hour" />
             <MenuItem value={1440} primaryText="All Day" />
           </SelectField>
+          <p style={{fontWeight:"bold"}}> Time Requested </p>
+
               <div>
                   <RaisedButton
                     label={'$0.25'}
@@ -262,7 +261,7 @@ class BuyMenu extends Component {
                 </div>
                 <FlatButton
                   label="Next"
-                  disabled={this.state.amountDue != 0}
+                  disabled={this.state.amountDue !== 0}
                   disableTouchRipple={true}
                   disableFocusRipple={true}
                   onTouchTap={this.handleNext}
@@ -330,8 +329,8 @@ class BuyMenu extends Component {
     ];
 
 
-    if (step == 2){
-      if (this.state.barCode == ""){
+    if (step === 2){
+      if (this.state.barCode === ""){
         const {stepIndex} = this.state;
         this.setState({
           barCode: Math.floor(Math.random() * (1000000000000))
@@ -421,7 +420,7 @@ class BuyMenu extends Component {
     const {finished, stepIndex} = this.state;
 
     return (
-      <div className="BuyMenu" style={{maxWidth: 680, maxHeight: 400, margin: 'auto'}}>
+      <div className="BuyMenu" style={{maxWidth: 680, margin: 'auto'}}>
         <Stepper activeStep={stepIndex} orientation="vertical">
           <Step>
             <StepLabel>Select preferred transaction method</StepLabel>

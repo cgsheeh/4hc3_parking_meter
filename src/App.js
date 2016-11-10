@@ -3,6 +3,8 @@ import './App.css';
 import mac from './mac.jpeg';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 
 //
 import {
@@ -41,6 +43,21 @@ const styles = {
   }
 };
 
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: "#990033",
+    primary2Color: "#2173B3",
+    primary3Color: "#A9D2EB",
+    accent1Color: "#ED3B3B",
+    accent2Color: "#ED2B2B",
+    accent3Color: "#F58C8C"
+  },
+  appBar: {
+    height: 50,
+  },
+});
+
+
 
 class MainMenu extends Component {
   constructor(props) {
@@ -72,9 +89,11 @@ class MainMenu extends Component {
   render_BuyMenu () {
     return (
       <div className="MainMenu">
-        <BuyMenu />
-          <br />
-          <br />
+        <div>
+          <BuyMenu />
+            <br />
+            <br />
+        </div>
         <RaisedButton
           label="Home"
           labelPosition="before"
@@ -90,11 +109,14 @@ class MainMenu extends Component {
   render_RefundMenu () {
     return (
       <div className="MainMenu">
+        <div>
         <RefundMenu 
           return_home={this.home_clicked}
         />
+
           <br />
           <br />
+        </div>
         <RaisedButton
           label="Home"
           labelPosition="before"
@@ -171,7 +193,7 @@ class App extends Component {
   render_refund_menu() {
     return (
       <div className="App">
-        <MuiThemeProvider>
+        <MuiThemeProvider muiTheme={muiTheme}>
           <RefundMenu />
         </MuiThemeProvider>
       </div>
@@ -181,7 +203,7 @@ class App extends Component {
   render_buy_menu() {
     return (
       <div className="App">
-        <MuiThemeProvider>
+        <MuiThemeProvider muiTheme={muiTheme}>
           <BuyMenu />
         </MuiThemeProvider>
       </div>
@@ -190,7 +212,7 @@ class App extends Component {
 
   render_main_menu() {
     return (
-      <MuiThemeProvider>
+      <MuiThemeProvider muiTheme={muiTheme}>
         <div className="App">
       
           <MainMenu />
